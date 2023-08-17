@@ -38,7 +38,7 @@ const ProductCard = ({
           className="bg-[#dbeafe] text-black text-[15px] md:text-[15px] font-bold hover:bg-[#dbeafe] w-full mb-8"
           variant="contained"
         >
-          Product Details
+          {lang ? "تفاصيل المنتج" : "détails du produit"}
         </Button>
       </Link>
     </Box>

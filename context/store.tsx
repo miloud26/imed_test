@@ -69,7 +69,7 @@ const DataProvider = ({ children }: { children: React.ReactNode }) => {
 
   const getAllProducts = async () => {
     try {
-      const response = await fetch("http://localhost:5000/products", {
+      const response = await fetch("https://ee-mxsk.onrender.com/products", {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -112,7 +112,7 @@ const DataProvider = ({ children }: { children: React.ReactNode }) => {
   };
   const getSheetUrl = async () => {
     try {
-      const response = await fetch("http://localhost:5000/sheet", {
+      const response = await fetch("https://ee-mxsk.onrender.com/sheet", {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -127,7 +127,7 @@ const DataProvider = ({ children }: { children: React.ReactNode }) => {
 
   const getPixelID = async () => {
     try {
-      const response = await fetch("http://localhost:5000/pixel", {
+      const response = await fetch("https://ee-mxsk.onrender.com/pixel", {
         method: "GET",
         headers: {
           "Content-Type": "application/json",

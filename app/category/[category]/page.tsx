@@ -1,15 +1,16 @@
 "use client";
 import React, { FC, useState } from "react";
-import { Box, Pagination } from "@mui/material";
+import { Box, Pagination, Button, Typography } from "@mui/material";
 import ShopSidebar from "@/components/ShopSidebar";
 import ShoppingPage from "@/components/ShoppingPage";
 import { useGlobalContext } from "@/context/store";
+import Link from "next/link";
 type CategoryType = {
   params: { category: string };
 };
 
 const SinglePageProductsCategory: FC<CategoryType> = ({ params }) => {
-  const { dataProducts } = useGlobalContext();
+  const { dataProducts, lang } = useGlobalContext();
 
   const dataProduct = dataProducts?.filter(
     (item) => item.category == params.category
@@ -21,6 +22,31 @@ const SinglePageProductsCategory: FC<CategoryType> = ({ params }) => {
     console.log(page);
     window.scrollTo({ top: 0, left: 0 });
   };
+  if (dataProduct?.length == 0) {
+    return (
+      <Box
+        className="w-full h-[60vh] flex justify-center items-center gap-y-5"
+        flexDirection={"column"}
+      >
+        <Box>
+          <Typography className="text-black text-2xl">
+            {lang ? "!!! لا توجد منتجات " : "Oups il n'y a pas de produits!!!"}
+          </Typography>
+        </Box>
+        <Box className="mt-5 flex justify-center items-center">
+          <Link href="/shop">
+            {" "}
+            <Button
+              className="block font-bold py-[8px] text-black hover:bg-[#dbeafe] bg-[#dbeafe] mx-[12px] "
+              variant="contained"
+            >
+              {lang ? "تسوق الان" : "Achetez maintenant"}
+            </Button>
+          </Link>
+        </Box>
+      </Box>
+    );
+  }
   return (
     <Box className="w-full flex justify-between gap-5 mb-7 relative">
       <ShopSidebar />

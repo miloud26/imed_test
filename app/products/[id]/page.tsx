@@ -1,8 +1,8 @@
 "use client";
 import React, { FC, useState } from "react";
 import { useGlobalContext } from "@/context/store";
-import { Box, Typography, TextField, Button } from "@mui/material";
-import Head from "next/head";
+import { Box, Typography, TextField, Button, Modal } from "@mui/material";
+import Link from "next/link";
 
 type ProductType = {
   params: { id: string };
@@ -14,6 +14,10 @@ const SinglePageProduct: FC<ProductType> = ({ params }) => {
   const [phone, setPhone] = useState<string>("");
   const [wilaya, setWilaya] = useState<string>("");
   const [adress, setAdress] = useState<string>("");
+
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
   const handleSubmitOrder = (e: any) => {
     e.preventDefault();
@@ -28,6 +32,7 @@ const SinglePageProduct: FC<ProductType> = ({ params }) => {
         method: "POST",
         body: data,
       });
+      handleOpen();
     } catch (error) {
       console.log(error);
     }
@@ -39,6 +44,41 @@ const SinglePageProduct: FC<ProductType> = ({ params }) => {
 
   return (
     <Box>
+      <div>
+        <Modal open={open} onClose={handleClose}>
+          <Box
+            className="w-full lg:w-[650px]"
+            sx={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+
+              bgcolor: "background.paper",
+              borderRadius: "15px",
+              boxShadow: 24,
+              p: 4,
+            }}
+          >
+            <Typography className="w-full text-center text-black text-xl">
+              {lang
+                ? "لقد تم استلام طلبك سنتصل بك للتأكيد في اقرب وقت"
+                : "Votre demande a bien été reçue, nous vous contacterons pour confirmer dans les plus brefs délais"}
+            </Typography>
+            <Box className="mt-5 flex justify-center items-center">
+              <Link href="/shop">
+                {" "}
+                <Button
+                  className="block font-bold py-[8px] text-black hover:bg-[#dbeafe] bg-[#dbeafe] mx-[12px] "
+                  variant="contained"
+                >
+                  {lang ? "تسوق الان" : "Achetez maintenant"}
+                </Button>
+              </Link>
+            </Box>
+          </Box>
+        </Modal>
+      </div>
       <Box
         width="100%"
         height={"80px"}
@@ -72,31 +112,31 @@ const SinglePageProduct: FC<ProductType> = ({ params }) => {
           <Box>
             <form
               onSubmit={handleSubmitOrder}
-              className="border-3 border-blue-400 border-solid rounded-md p-5 shadow-xl"
+              className="border-3 border-blue-400 border-solid rounded-md p-5 shadow-xl my-10"
             >
               <Box className="w-full grid grid-cols-1 md:grid-cols-2 gap-x-2 ">
                 <TextField
                   onChange={(e) => setName(e.target.value)}
                   placeholder={lang ? "الاسم الكامل" : "Full Name"}
-                  label={lang ? "الاسم الكامل" : "Full Name"}
+                  label={lang ? "الاسم الكامل" : "Nom & Prenom"}
                   className="mb-3"
                 />
                 <TextField
                   onChange={(e) => setPhone(e.target.value)}
                   placeholder={lang ? "رقم الهاتف" : "Phone Number"}
-                  label={lang ? "رقم الهاتف" : "Phone Number"}
+                  label={lang ? "رقم الهاتف" : "Telephone"}
                 />
               </Box>
               <Box className="w-full grid grid-cols-1 md:grid-cols-2 gap-x-2 mt-3">
                 <TextField
                   onChange={(e) => setWilaya(e.target.value)}
-                  placeholder="Wilaya"
-                  label="Wilaya"
+                  placeholder={lang ? "الولاية" : "Wilaya"}
+                  label={lang ? "الولاية" : "Wilaya"}
                   className="mb-3"
                 />
                 <TextField
-                  placeholder="Adresse"
-                  label="Adresse"
+                  placeholder={lang ? "العنوان" : "Adresse"}
+                  label={lang ? "العنوان" : "Adresse"}
                   onChange={(e) => setAdress(e.target.value)}
                 />
               </Box>
@@ -127,31 +167,31 @@ const SinglePageProduct: FC<ProductType> = ({ params }) => {
             </Box>
             <form
               onSubmit={handleSubmitOrder}
-              className="border-3 border-blue-400 border-solid rounded-md p-5 shadow-xl"
+              className="border-3 border-blue-400 border-solid rounded-md p-5 shadow-xl my-10"
             >
               <Box className="w-full grid grid-cols-1 md:grid-cols-2 gap-x-2 ">
                 <TextField
                   onChange={(e) => setName(e.target.value)}
                   placeholder={lang ? "الاسم الكامل" : "Full Name"}
-                  label={lang ? "الاسم الكامل" : "Full Name"}
+                  label={lang ? "الاسم الكامل" : "Nom & Prenom"}
                   className="mb-3"
                 />
                 <TextField
                   onChange={(e) => setPhone(e.target.value)}
                   placeholder={lang ? "رقم الهاتف" : "Phone Number"}
-                  label={lang ? "رقم الهاتف" : "Phone Number"}
+                  label={lang ? "رقم الهاتف" : "Telephone"}
                 />
               </Box>
               <Box className="w-full grid grid-cols-1 md:grid-cols-2 gap-x-2 mt-3">
                 <TextField
                   onChange={(e) => setWilaya(e.target.value)}
-                  placeholder="Wilaya"
-                  label="Wilaya"
+                  placeholder={lang ? "الولاية" : "Wilaya"}
+                  label={lang ? "الولاية" : "Wilaya"}
                   className="mb-3"
                 />
                 <TextField
-                  placeholder="Adresse"
-                  label="Adresse"
+                  placeholder={lang ? "العنوان" : "Adresse"}
+                  label={lang ? "العنوان" : "Adresse"}
                   onChange={(e) => setAdress(e.target.value)}
                 />
               </Box>

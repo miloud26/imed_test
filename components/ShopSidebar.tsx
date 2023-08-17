@@ -26,11 +26,27 @@ const ShopSidebar = () => {
       window.scrollTo({ top: 0, left: 0 });
     }
   };
-  const categorys: string[] = [
-    "1-5-years",
-    "6-10-years",
-    "11-15-years",
-    "baby-sitter",
+  const categorys = [
+    {
+      valueAr: "1 - 5 سنة",
+      valueFr: "1 - 5 ans",
+      value: "1-5-years",
+    },
+    {
+      valueAr: "6 - 10 سنة",
+      valueFr: "6 - 10 ans",
+      value: "6-10-years",
+    },
+    {
+      valueAr: "11 - 15 سنة",
+      valueFr: "11 - 15 ans",
+      value: "11-15-years",
+    },
+    {
+      valueAr: "مربية الاطفال",
+      valueFr: "Baby-sitter",
+      value: "baby-sitter",
+    },
   ];
   // let categorys: string[] = Array.from(
   //   new Set(dataProducts.map((item) => item.category))
@@ -70,10 +86,10 @@ const ShopSidebar = () => {
                           key={index}
                           className="my-5"
                           onClick={() => setOpenSubMenu(!openSubMenu)}
-                          onChange={() => setCategoryValue(ele)}
-                          value={ele}
+                          onChange={() => setCategoryValue(ele.value)}
+                          value={ele.value}
                           control={<Radio />}
-                          label={ele}
+                          label={lang ? ele.valueAr : ele.valueFr}
                         />
                         {/* <FormGroup
                           className={`ml-5 transition overflow-hidden ${
