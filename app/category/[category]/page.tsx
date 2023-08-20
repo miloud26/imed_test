@@ -76,8 +76,3 @@ const SinglePageProductsCategory: FC<CategoryType> = ({ params }) => {
 
 export default SinglePageProductsCategory;
 
-export function generateMetadata({ params }: CategoryType) {
-  return {
-    title: "boudjellal miloud",
-  };
-}
