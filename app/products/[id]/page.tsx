@@ -8,11 +8,7 @@ type ProductType = {
   params: { id: string };
 };
 
-export function generateMetadata({ params }: ProductType) {
-  return {
-    title: params.id,
-  };
-}
+
 
 export default function Page({ params }: ProductType) {
   const { dataProducts, lang, sheet } = useGlobalContext();
