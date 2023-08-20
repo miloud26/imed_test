@@ -5,6 +5,8 @@ import ShopSidebar from "@/components/ShopSidebar";
 import ShoppingPage from "@/components/ShoppingPage";
 import { useGlobalContext } from "@/context/store";
 import Link from "next/link";
+import { Metadata } from "next";
+
 type CategoryType = {
   params: { category: string };
 };
@@ -73,3 +75,9 @@ const SinglePageProductsCategory: FC<CategoryType> = ({ params }) => {
 };
 
 export default SinglePageProductsCategory;
+
+export function generateMetadata({ params }: CategoryType) {
+  return {
+    title: "boudjellal miloud",
+  };
+}

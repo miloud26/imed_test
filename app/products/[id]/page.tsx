@@ -8,8 +8,14 @@ type ProductType = {
   params: { id: string };
 };
 
-const SinglePageProduct: FC<ProductType> = ({ params }) => {
-  const { dataProducts, lang, sheet, pixel } = useGlobalContext();
+export function generateMetadata({ params }: ProductType) {
+  return {
+    title: params.id,
+  };
+}
+
+export default function Page({ params }: ProductType) {
+  const { dataProducts, lang, sheet } = useGlobalContext();
   const [name, setName] = useState<string>("");
   const [phone, setPhone] = useState<string>("");
   const [wilaya, setWilaya] = useState<string>("");
@@ -208,6 +214,4 @@ const SinglePageProduct: FC<ProductType> = ({ params }) => {
       </Box>
     </Box>
   );
-};
-
-export default SinglePageProduct;
+}

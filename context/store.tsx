@@ -20,6 +20,8 @@ type DataType = {
     prix: string;
     category: string;
     image: string;
+    metaTitle: string;
+    metaDesc: string;
   }[];
   setDataProducts: (
     e: {
@@ -31,6 +33,8 @@ type DataType = {
       prix: string;
       category: string;
       image: string;
+      metaTitle: string;
+      metaDesc: string;
     }[]
   ) => void;
 };
@@ -64,6 +68,8 @@ const DataProvider = ({ children }: { children: React.ReactNode }) => {
       prix: string;
       category: string;
       image: string;
+      metaTitle: string;
+      metaDesc: string;
     }[]
   >([]);
 

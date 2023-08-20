@@ -351,3 +351,9 @@ const Contact = () => {
 };
 
 export default Contact;
+
+export function generateMetadata({ params }: any) {
+  return {
+    title: "boudjellal miloud",
+  };
+}

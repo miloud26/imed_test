@@ -6,8 +6,8 @@ import { DataProvider } from "@/context/store";
 import Script from "next/script";
 
 export const metadata: Metadata = {
-  title: "shopping store for bebe",
-  description: "description of store ",
+  title: "Coozy | Home",
+  description: "where every baby's needs find a hug",
 };
 
 export default async function RootLayout({
