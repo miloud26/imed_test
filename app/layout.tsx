@@ -4,6 +4,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { DataProvider } from "@/context/store";
 import Script from "next/script";
+import { StyledEngineProvider } from "@mui/material";
 
 export const metadata: Metadata = {
   title: "Coozy | Home",
@@ -44,14 +45,15 @@ fbq('track', 'PageView');
 `,
         }}
       />
-
-      <body>
-        <DataProvider>
-          <Navbar />
-          {children}
-          <Footer />
-        </DataProvider>
-      </body>
+      <StyledEngineProvider injectFirst>
+        <body id="root">
+          <DataProvider>
+            <Navbar />
+            {children}
+            <Footer />
+          </DataProvider>
+        </body>
+      </StyledEngineProvider>
     </html>
   );
 }
