@@ -48,7 +48,9 @@ fbq('track', 'PageView');
       <body>
         <DataProvider>
           <Navbar />
+          <StyledEngineProvider injectFirst>
           {children}
+          <StyledEngineProvider/>
           <Footer />
         </DataProvider>
       </body>
