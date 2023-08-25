@@ -8,11 +8,7 @@ import { Metadata } from "next";
 type ProductType = {
   params: { id: string };
 };
-export const metadata = {
-  title: {
-    absolute: "custom page title for Home page...",
-  },
-};
+
 export default function Page({ params }: ProductType) {
   const { dataProducts, lang, sheet } = useGlobalContext();
   const [name, setName] = useState<string>("");
