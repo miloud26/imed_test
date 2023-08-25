@@ -1,59 +1,33 @@
 "use client";
-import { Box } from "@mui/material";
-import Image from "next/image";
-import { Swiper, SwiperSlide } from "swiper/react";
-import "swiper/css";
-import { Autoplay } from "swiper/modules";
+import { Box, Typography } from "@mui/material";
+import { useGlobalContext } from "@/context/store";
 
 const Slider = () => {
+  const { lang } = useGlobalContext();
   return (
-    <Box>
-      <Swiper
-        spaceBetween={20}
-        autoplay={{
-          delay: 3000,
-          disableOnInteraction: false,
-        }}
-        pagination={{
-          clickable: true,
-        }}
-        modules={[Autoplay]}
-        className="mySwiper"
-      >
-        <SwiperSlide className="w-full">
-          <Box className="w-[100%]">
-            <Image
-              width={"1652"}
-              height={"690"}
-              src="/slide1.webp"
-              alt="slider"
-              className="w-full object-cover"
-            />
+    <Box className="w-full p-0 lg:p-6 overBg">
+      <video className="w-full" src="video.mp4" autoPlay muted loop></video>
+      <Box className="absolute top-0 left-0 w-full h-full flex justify-center items-center z-20 text-white">
+        {lang ? (
+          <Box>
+            <Typography className="text-sm  lg:text-lg xl:text-3xl font-bold text-center mb-5">
+              من لحظة الولادة الى كل يوم
+            </Typography>
+            <Typography className="text-sm  lg:text-lg xl:text-3xl font-bold text-center">
+              رحلتنا معا من حنان الامومة الى حظن متجرنا
+            </Typography>
           </Box>
-        </SwiperSlide>
-        <SwiperSlide className="w-full">
-          <Box className="w-[100%]">
-            <Image
-              width={"1652"}
-              height={"690"}
-              src="/slide1.webp"
-              alt="slider"
-              className="w-full object-cover"
-            />
+        ) : (
+          <Box>
+            <Typography className="text-sm  lg:text-lg xl:text-3xl font-bold text-center mb-5 letter tracking-wider">
+              Bébé dés sa naissance, chaque jour est un voyage
+            </Typography>
+            <Typography className="text-sm  lg:text-lg xl:text-3xl font-bold text-center letter tracking-wider">
+              de la tendresse maternelle a la l'étreinte de notre boutique
+            </Typography>
           </Box>
-        </SwiperSlide>
-        <SwiperSlide className="w-full">
-          <Box className="w-[100%]">
-            <Image
-              width={"1652"}
-              height={"690"}
-              src="/slide1.webp"
-              alt="slider"
-              className="w-full object-cover"
-            />
-          </Box>
-        </SwiperSlide>
-      </Swiper>
+        )}
+      </Box>
     </Box>
   );
 };

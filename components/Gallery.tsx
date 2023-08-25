@@ -42,7 +42,7 @@ const Galory = ({
               key={item.id}
               className={type ? "galory-class" : "slider-custom"}
             >
-              <img src={item.image} alt={"image item"} />
+              <img src={item.image} alt={item.titleFr} />
             </SwiperSlide>
           );
         })}

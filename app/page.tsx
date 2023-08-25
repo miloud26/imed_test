@@ -5,7 +5,7 @@ import Niches from "@/components/Niches";
 import ProductsSection from "@/components/ProductsSection";
 import Slider from "@/components/Slider";
 import { Box } from "@mui/material";
-import { product, partners } from "../data";
+import { partners } from "../data";
 import { useGlobalContext } from "@/context/store";
 
 export default function Home() {
@@ -85,7 +85,10 @@ export default function Home() {
         titleAr="معرض المنتجات"
         subtitleFr="Découvrez nos nouveaux produits et nos meilleures ventes"
         subtitleAr="تعرف على منتجاتنا الجديدة و الاكثر مبيعا"
-        data={product}
+        data={dataProducts.map((item, index) => {
+          const { image, titleFr } = item;
+          return { image, titleFr, id: index };
+        })}
         type={1}
       />
       <Galory

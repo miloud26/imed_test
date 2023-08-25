@@ -43,6 +43,7 @@ type GalorySection = {
   data: {
     id: number;
     image: string;
+    titleFr: string;
   }[];
 };
 

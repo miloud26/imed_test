@@ -3,13 +3,16 @@ import React, { FC, useState } from "react";
 import { useGlobalContext } from "@/context/store";
 import { Box, Typography, TextField, Button, Modal } from "@mui/material";
 import Link from "next/link";
+import { Metadata } from "next";
 
 type ProductType = {
   params: { id: string };
 };
-
-
-
+export const metadata = {
+  title: {
+    absolute: "custom page title for Home page...",
+  },
+};
 export default function Page({ params }: ProductType) {
   const { dataProducts, lang, sheet } = useGlobalContext();
   const [name, setName] = useState<string>("");

@@ -18,7 +18,7 @@ const CardNiche = ({
     <Box className="relative  card-niche overflow-hidden">
       <Image
         width={"616"}
-        height={"400"}
+        height={"616"}
         alt="card niche"
         src={image}
         className="object-cover"
@@ -35,7 +35,7 @@ const CardNiche = ({
             className="bg-[#dbeafe] text-black font-bold hover:bg-[#dbeafe]"
             variant="contained"
           >
-            {lang ? "تسوق الان" : " Go To Shop"}
+            {lang ? "تسوق الان" : "Achetez maintenant"}
           </Button>
         </Link>
       </Box>
@@ -46,7 +46,7 @@ const CardNiche = ({
 const data = [
   {
     id: 1,
-    image: "/niche1.webp",
+    image: "/niche1.png",
     titleFr: "1 - 5 Ans",
     category: "1-5-years",
     titleAr: "5 - 1 سنة",
@@ -56,16 +56,17 @@ const data = [
   },
   {
     id: 2,
-    image: "/niche2.webp",
+    image: "/niche2.jpg",
     titleFr: "6 - 10 Ans",
     category: "6-10-years",
     titleAr: "10 - 6 سنة",
-    subTitleFr: "Votre adolescent a besoin de plusieurs choses à savoir",
-    subTitleAr: "طفلك في مرحلة المراهقة يحتاج عدة امور تعرف عليها",
+    subTitleFr:
+      "Votre enfant en phase d'exploration a besoin de plusieurs éléments, apprenez à les connaître",
+    subTitleAr: "طفلك في مرحلة الاستكشاف يحتاج عدة أمور تعرف عليه",
   },
   {
     id: 3,
-    image: "/niche3.webp",
+    image: "/niche3.png",
     titleFr: "11 - 15 Ans",
     titleAr: "15 - 11 سنة",
     category: "11-15-years",
@@ -75,13 +76,13 @@ const data = [
   },
   {
     id: 4,
-    image: "/niche4.webp",
-    titleFr: "Vos fournitures en tant que mère",
-    titleAr: "مستلزماتك ك ام",
+    image: "/niche4.jpg",
+    titleFr: "Ce dont vous avez besoin en tant que mère",
+    titleAr: "ما تحتاجينه كأم",
     category: "baby-sitter",
     subTitleFr:
-      "Vous êtes une bonne mère, vous aurez besoin de ces produits, apprenez à les connaître dès maintenant",
-    subTitleAr: "انت ك ام جيدة ستلزمك هاته المنتجات تعرفي عليها الان",
+      "Pour une maternité facile, pleine de philanthropie et d’efforts des patients atteints de cancer",
+    subTitleAr: "لأمومة سهلة ، مفعمة بالصحة والنشاط والكثير من المشاعر",
   },
 ];
 const Niches = () => {
