@@ -15,10 +15,14 @@
   border: none;
   outline: 0;
   font-family: "Poppins", sans-serif !important;
+  line-height: 1.5px;
+}
+html {
+  scroll-behavior: smooth;
 }
 .arabic {
   font-family: "Noto Naskh Arabic", serif !important;
-  direction: rtl;
+  direction: rtl !important;
 }
 
 /* css for section & components niche card */
@@ -101,6 +105,26 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.1);
   z-index: 10;
+}
+/*  animation of btn buy now*/
+.btn-buynow {
+  animation-name: buyNow;
+  animation-duration: 1s;
+  animation-delay: 2s;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+  z-index: 1000;
+}
+
+@keyframes buyNow {
+  0% {
+    scale: 1;
+    translate: -10px 0;
+  }
+  100% {
+    scale: 1.1;
+    translate: 10px 0;
+  }
 }

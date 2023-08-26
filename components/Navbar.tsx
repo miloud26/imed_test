@@ -6,6 +6,8 @@ import Link from "next/link";
 import { useGlobalContext } from "@/context/store";
 
 const Navbar = () => {
+  const productPage = localStorage.getItem("productPage");
+
   const { lang, setLang } = useGlobalContext();
   const handleLang = () => {
     setLang(!lang);
@@ -13,7 +15,9 @@ const Navbar = () => {
   return (
     <Box
       sx={{ flexDirection: lang ? "row-reverse" : "" }}
-      className={`flex justify-center md:justify-between items-center px-[25px] gap-x-3 md:px-[86px] py-3 shadow-xl`}
+      className={` justify-center md:justify-between items-center px-[25px] gap-x-3 md:px-[86px] py-3 shadow-xl ${
+        productPage == "1" ? "flex" : "hidden"
+      }`}
     >
       <Box className="w-full md:w-auto">
         <Link href="/">

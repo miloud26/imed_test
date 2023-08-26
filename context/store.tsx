@@ -13,6 +13,7 @@ type DataType = {
   setLang: (e: boolean) => void;
   dataProducts: {
     id: string;
+    productPage: string;
     titleFr: string;
     titleAr: string;
     descriptionFr: string;
@@ -22,6 +23,7 @@ type DataType = {
     image: string;
     metaTitle: string;
     metaDesc: string;
+    upsellId: string;
   }[];
   setDataProducts: (
     e: {
@@ -35,6 +37,8 @@ type DataType = {
       image: string;
       metaTitle: string;
       metaDesc: string;
+      upsellId: string;
+      productPage: string;
     }[]
   ) => void;
 };
@@ -55,7 +59,7 @@ const DataContext = createContext<DataType>({
 
 const DataProvider = ({ children }: { children: React.ReactNode }) => {
   const [collapse, setCollapse] = useState(false);
-  const [lang, setLang] = useState(false);
+  const [lang, setLang] = useState(true);
   const [sheet, setSheet] = useState("");
   const [pixel, setPixel] = useState("");
   const [dataProducts, setDataProducts] = useState<
@@ -70,6 +74,8 @@ const DataProvider = ({ children }: { children: React.ReactNode }) => {
       image: string;
       metaTitle: string;
       metaDesc: string;
+      upsellId: string;
+      productPage: string;
     }[]
   >([]);
 
@@ -94,7 +100,8 @@ const DataProvider = ({ children }: { children: React.ReactNode }) => {
           descAr,
           img,
           category,
-
+          productPage,
+          upsellId,
           metaTitle,
           metaDesc,
         } = item;
@@ -102,10 +109,12 @@ const DataProvider = ({ children }: { children: React.ReactNode }) => {
           titleFr,
           titleAr,
           id,
+          upsellId,
           descriptionFr: descFr,
           descriptionAr: descAr,
           image: img,
           category,
+          productPage,
           prix,
           metaTitle,
           metaDesc,
@@ -172,5 +181,7 @@ const DataProvider = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-export const useGlobalContext = () => useContext(DataContext);
+export const useGlobalContext = () => {
+  return useContext(DataContext);
+};
 export { DataProvider };

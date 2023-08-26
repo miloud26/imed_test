@@ -96,6 +96,7 @@ const adresse = [
 ];
 
 const Footer = () => {
+  const productPage = localStorage.getItem("productPage");
   const { lang } = useGlobalContext();
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -103,11 +104,9 @@ const Footer = () => {
   return (
     <>
       <Box
-        className={
-          lang
-            ? "mt-1 bg-blue-100 text-dark items-center grid grid-cols-1 md:grid-cols-2 gap-y-9   xl:grid-cols-4  px-[20px] lg:px-[90px] py-9 arabic"
-            : "mt-1 bg-blue-100 text-dark items-center grid grid-cols-1 md:grid-cols-2 gap-y-9   xl:grid-cols-4  px-[20px] lg:px-[90px] py-9 francais"
-        }
+        className={`mt-1 bg-blue-100 text-dark items-center grid grid-cols-1 md:grid-cols-2 gap-y-9   xl:grid-cols-4  px-[20px] lg:px-[90px] py-9 ${
+          lang ? "arabic" : ""
+        } ${productPage == "1" ? "grid" : "hidden"}`}
       >
         <Box>
           <ul>

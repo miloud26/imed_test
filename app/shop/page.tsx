@@ -10,7 +10,7 @@ const Shop = () => {
   const [page, setPage] = useState(1);
   const handleClick = (e: any) => {
     setPage(parseInt(e.target?.textContent));
-    console.log(page);
+
     window.scrollTo({ top: 0, left: 0 });
   };
   return (

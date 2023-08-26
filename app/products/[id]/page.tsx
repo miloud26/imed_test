@@ -1,35 +1,155 @@
 "use client";
-import React, { FC, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useGlobalContext } from "@/context/store";
-import { Box, Typography, TextField, Button, Modal } from "@mui/material";
+import {
+  Box,
+  Typography,
+  TextField,
+  Button,
+  Modal,
+  FormControlLabel,
+  Radio,
+  FormControl,
+  RadioGroup,
+} from "@mui/material";
 import Link from "next/link";
-import { Metadata } from "next";
+import Image from "next/image";
+
+import Review from "@/components/Review";
 
 type ProductType = {
   params: { id: string };
 };
 
 export default function Page({ params }: ProductType) {
+  const [orderId, setOrderId] = useState("");
+  const unique = new Date().getTime().toString();
+  const createOrder = async () => {
+    const order = {
+      unique,
+      name: name,
+      number: phone,
+      wilaya: wilaya,
+      adress: adress,
+    };
+    await fetch("https://ee-mxsk.onrender.com/order", {
+      method: "POST",
+      body: JSON.stringify(order),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+  };
+
+  const getOrder = async () => {
+    const order = await fetch(`https://ee-mxsk.onrender.com/order`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const allOrders = await order.json();
+    const tempOrderId = allOrders.orders.filter(
+      (item: any) => item.unique == unique
+    );
+    console.log(tempOrderId);
+    setOrderId(tempOrderId[0]?._id);
+  };
+  useEffect(() => {
+    createOrder();
+    getOrder();
+  }, []);
+
   const { dataProducts, lang, sheet } = useGlobalContext();
+  const dataProduct = dataProducts.filter(
+    (item) => item.id.toString() == params.id.toString()
+  )[0];
+
+  localStorage.setItem("productPage", dataProduct?.productPage);
+
+  const upsellProduct = dataProducts
+    .filter((item) => item.id.toString() == dataProduct.upsellId.toString())
+    .slice(0, 1)[0];
+
   const [name, setName] = useState<string>("");
   const [phone, setPhone] = useState<string>("");
   const [wilaya, setWilaya] = useState<string>("");
-  const [adress, setAdress] = useState<string>("");
+  const [adress, setAdress] = useState("");
+  const [quantity, setQuantity] = useState(1);
+  const [model, setModel] = useState("");
+  const [prixDelevred, setPrixDelevred] = useState(500);
+
+  const updateOrder = () => {
+    setTimeout(async () => {
+      await fetch(`https://ee-mxsk.onrender.com/order/${orderId}`, {
+        method: "PATCH",
+        body: JSON.stringify({
+          name,
+          number: phone,
+          wilaya,
+          adress,
+          product: dataProduct?.titleFr,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+    }, 3000);
+  };
+  const deleteOrder = async () => {
+    await fetch(`https://ee-mxsk.onrender.com/order/${orderId}`, {
+      method: "DELETE",
+
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+  };
+
+  useEffect(() => {
+    if (quantity > 1) {
+      setPrixDelevred(0);
+    } else {
+      setPrixDelevred(500);
+    }
+  }, [quantity]);
 
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  const handleSubmitOrder = (e: any) => {
+  const handleSubmitOrder = async (e: any) => {
     e.preventDefault();
+    deleteOrder();
+
+    const prevOrder = localStorage.getItem("dateMakeOrder");
+    const newOrder = new Date().getTime().toString();
+
+    const timeDeffrent = Number(newOrder) - Number(prevOrder);
+    localStorage.setItem("dateMakeOrder", newOrder.toString());
 
     try {
       const data = new FormData();
+      data.append(
+        "date",
+        `${new Date().getDate()}/${
+          new Date().getMonth() + 1
+        } - ${new Date().getHours()}H : ${new Date().getMinutes()}M`
+      );
       data.append("name", name);
       data.append("phone", phone);
       data.append("wilaya", wilaya);
       data.append("adress", adress);
-      fetch(sheet, {
+      data.append("product", dataProduct.titleFr);
+      data.append("quantity", quantity.toString());
+      data.append("model", model);
+      data.append(
+        "prix",
+        (+dataProduct.prix * +quantity + prixDelevred).toString()
+      );
+      data.append("upsell", timeDeffrent <= 5 * 60 * 60 * 1000 ? "1" : "");
+
+      await fetch(sheet, {
         method: "POST",
         body: data,
       });
@@ -39,12 +159,19 @@ export default function Page({ params }: ProductType) {
     }
   };
 
-  const dataProduct = dataProducts.filter(
-    (item) => item.id.toString() == params.id.toString()
-  )[0];
-
   return (
     <Box>
+      <Box className="fixed bottom-0 left-0 w-full mb-2  flex justify-center items-center btn-buynow">
+        <Button
+          onClick={() => {
+            window.scrollTo({ top: 0, left: 0 });
+          }}
+          className="  lg:text-xl w-[80%] h-[20px] py-6 font-bold lg:py-[30px] text-black hover:bg-[#91b7e9] bg-[#91b7e9] mx-[12px] flex justify-center items-center"
+          variant="contained"
+        >
+          {lang ? "اشتري الان" : "Acheter maintenant"}
+        </Button>
+      </Box>
       <div>
         <Modal open={open} onClose={handleClose}>
           <Box
@@ -61,19 +188,58 @@ export default function Page({ params }: ProductType) {
               p: 4,
             }}
           >
-            <Typography className="w-full text-center text-black text-xl">
-              {lang
-                ? "لقد تم استلام طلبك سنتصل بك للتأكيد في اقرب وقت"
-                : "Votre demande a bien été reçue, nous vous contacterons pour confirmer dans les plus brefs délais"}
-            </Typography>
-            <Box className="mt-5 flex justify-center items-center">
+            {upsellProduct && (
+              <Box>
+                <Box>
+                  <Typography className="text-3xl text-center font-bold w-full mb-6">
+                    {lang ? upsellProduct?.titleAr : upsellProduct?.titleFr}
+                  </Typography>
+                </Box>
+                <Box>
+                  <Image
+                    src={upsellProduct?.image}
+                    alt={upsellProduct?.titleFr}
+                    width={600}
+                    height={600}
+                    className="rounded-lg"
+                  />
+                  <Link
+                    target="_blank"
+                    href={`/products/${dataProduct?.upsellId}`}
+                  >
+                    <Box className="mt-5 flex justify-center items-center w-full">
+                      {" "}
+                      <Button
+                        className="block w-full font-bold py-[8px] text-black hover:bg-[#dbeafe] bg-[#dbeafe] mx-[12px] "
+                        variant="contained"
+                      >
+                        {lang ? "استفد من العرض" : "Profitez de l'offre"}
+                      </Button>
+                    </Box>
+                  </Link>
+                </Box>
+              </Box>
+            )}
+            <Box
+              flexDirection={"column"}
+              className="mt-5 flex justify-center items-center w-full"
+            >
+              {!upsellProduct && (
+                <Typography className="text-center text-lg mb-6">
+                  {lang
+                    ? "لقد تم استلام طلبك سنتصل بك للتأكيد في اقرب وقت"
+                    : "Votre demande a bien été reçue, nous vous contacterons pour confirmer dans les plus brefs délais"}
+                </Typography>
+              )}
               <Link href="/shop">
                 {" "}
                 <Button
-                  className="block font-bold py-[8px] text-black hover:bg-[#dbeafe] bg-[#dbeafe] mx-[12px] "
+                  className="block font-bold w-full py-[8px] text-black hover:bg-[#dbeafe] bg-[#dbeafe] mx-[12px] "
                   variant="contained"
                 >
-                  {lang ? "تسوق الان" : "Achetez maintenant"}
+                  {upsellProduct
+                    ? `${lang ? "لا شكرا" : "Non, Merci"} `
+                    : `${lang ? "تسوق الان" : "Achetez maintenant"}`}
                 </Button>
               </Link>
             </Box>
@@ -117,20 +283,29 @@ export default function Page({ params }: ProductType) {
             >
               <Box className="w-full grid grid-cols-1 md:grid-cols-2 gap-x-2 ">
                 <TextField
-                  onChange={(e) => setName(e.target.value)}
+                  onChange={(e) => {
+                    setName(e.target.value);
+                    updateOrder();
+                  }}
                   placeholder={lang ? "الاسم الكامل" : "Full Name"}
                   label={lang ? "الاسم الكامل" : "Nom & Prenom"}
                   className="mb-3"
                 />
                 <TextField
-                  onChange={(e) => setPhone(e.target.value)}
+                  onChange={(e) => {
+                    setPhone(e.target.value);
+                    updateOrder();
+                  }}
                   placeholder={lang ? "رقم الهاتف" : "Phone Number"}
                   label={lang ? "رقم الهاتف" : "Telephone"}
                 />
               </Box>
               <Box className="w-full grid grid-cols-1 md:grid-cols-2 gap-x-2 mt-3">
                 <TextField
-                  onChange={(e) => setWilaya(e.target.value)}
+                  onChange={(e) => {
+                    setWilaya(e.target.value);
+                    updateOrder();
+                  }}
                   placeholder={lang ? "الولاية" : "Wilaya"}
                   label={lang ? "الولاية" : "Wilaya"}
                   className="mb-3"
@@ -138,16 +313,132 @@ export default function Page({ params }: ProductType) {
                 <TextField
                   placeholder={lang ? "العنوان" : "Adresse"}
                   label={lang ? "العنوان" : "Adresse"}
-                  onChange={(e) => setAdress(e.target.value)}
+                  onChange={(e) => {
+                    setAdress(e.target.value);
+                    updateOrder();
+                  }}
                 />
               </Box>
-              <Button
-                className="font-bold w-full mt-3 py-[8px] text-black hover:bg-[#dbeafe] bg-[#dbeafe] "
-                variant="contained"
-                type="submit"
-              >
-                {lang ? "اشتري الان" : "Acheter maintenant"}
-              </Button>
+              <Box className="my-6 w-full p-4  bg-[#dbeafe] rounded-lg">
+                <Box className="w-fulll flex justify-between items-center mb-7">
+                  <Typography className="font-bold text-xl">
+                    {lang ? "سعر المنتج" : "prix de produit"}
+                  </Typography>
+                  <Typography className="font-bold text-xl">
+                    {dataProduct?.prix} DZD
+                  </Typography>
+                </Box>
+                <Box className="w-fulll flex justify-between items-center mb-7">
+                  <Typography className="font-bold text-xl">
+                    {lang ? "الكمية" : "Quantite"}
+                  </Typography>
+                  <Typography className="font-bold text-xl">
+                    {quantity}
+                  </Typography>
+                </Box>
+                <Box className="w-fulll flex justify-between items-center mb-7">
+                  <Typography className="font-bold text-xl">
+                    {lang ? "سعر التوصيل" : "prix de livraison"}
+                  </Typography>
+                  <Typography className="font-bold text-xl">
+                    {prixDelevred} DZD
+                  </Typography>
+                </Box>
+                <Box className="w-fulll flex justify-between items-center ">
+                  <Typography className="font-bold text-xl">
+                    {lang ? "المجموع" : "Total"}
+                  </Typography>
+                  <Typography className="font-bold text-xl">
+                    {(+dataProduct?.prix * quantity + prixDelevred).toString()}{" "}
+                    DZD
+                  </Typography>
+                </Box>
+              </Box>
+              <Box className="my-6 w-full p-4  bg-[#dbeafe] rounded-lg mt-5">
+                {" "}
+                <Box className="w-fulll flex justify-between items-center ">
+                  <FormControl>
+                    <RadioGroup>
+                      <FormControlLabel
+                        onClick={() => {
+                          setQuantity(1);
+                          setPrixDelevred(500);
+                        }}
+                        value="female"
+                        control={<Radio />}
+                        label={
+                          lang ? (
+                            <Typography className="font-bold text-xl">
+                              قطعة واحدة و التوصيل 500 دج
+                            </Typography>
+                          ) : (
+                            <Typography className="font-bold text-xl">
+                              Une pièce et la livraison est de 500 DZD
+                            </Typography>
+                          )
+                        }
+                      />
+                      <FormControlLabel
+                        onClick={() => {
+                          setQuantity(2);
+                          setPrixDelevred(0);
+                        }}
+                        value="male"
+                        control={<Radio />}
+                        label={
+                          lang ? (
+                            <Typography className="font-bold text-xl">
+                              اشتري اثنين واحصل على توصيل مجاني
+                            </Typography>
+                          ) : (
+                            <Typography className="font-bold text-xl">
+                              Achetez-en deux et bénéficiez de la livraison
+                              gratuite
+                            </Typography>
+                          )
+                        }
+                      />
+                    </RadioGroup>
+                  </FormControl>
+                </Box>
+              </Box>
+              <Box className="w-full flex justify-between items-center ">
+                <Button
+                  className="font-bold w-[60%] ml-1 mt-3 py-[8px] text-black hover:bg-[#dbeafe] bg-[#dbeafe] "
+                  variant="contained"
+                  type="submit"
+                >
+                  {lang ? "اشتري الان" : "Acheter maintenant"}
+                </Button>
+                <Box className="w-[40%] flex justify-between items-center  rounded-lg p-4">
+                  <Button
+                    className="font-bold flex justify-between items-center w-[100%] mt-3 py-[8px] text-black hover:bg-[#dbeafe] bg-[#dbeafe] "
+                    variant="contained"
+                  >
+                    <Typography
+                      className="font-bold "
+                      onClick={() => setQuantity(quantity + 1)}
+                    >
+                      +
+                    </Typography>
+                    <Typography className="font-bold">{quantity}</Typography>
+                    <Typography
+                      className="font-bold "
+                      onClick={() => {
+                        if (quantity == 1) {
+                          setQuantity(quantity);
+                          setPrixDelevred(500);
+                        } else {
+                          setQuantity(quantity - 1);
+                          setPrixDelevred(0);
+                        }
+                      }}
+                    >
+                      -
+                    </Typography>
+                  </Button>
+                </Box>
+              </Box>
             </form>
             <Box className="mt-8">
               {" "}
@@ -166,47 +457,10 @@ export default function Page({ params }: ProductType) {
                 }}
               />
             </Box>
-            <form
-              onSubmit={handleSubmitOrder}
-              className="border-3 border-blue-400 border-solid rounded-md p-5 shadow-xl my-10"
-            >
-              <Box className="w-full grid grid-cols-1 md:grid-cols-2 gap-x-2 ">
-                <TextField
-                  onChange={(e) => setName(e.target.value)}
-                  placeholder={lang ? "الاسم الكامل" : "Full Name"}
-                  label={lang ? "الاسم الكامل" : "Nom & Prenom"}
-                  className="mb-3"
-                />
-                <TextField
-                  onChange={(e) => setPhone(e.target.value)}
-                  placeholder={lang ? "رقم الهاتف" : "Phone Number"}
-                  label={lang ? "رقم الهاتف" : "Telephone"}
-                />
-              </Box>
-              <Box className="w-full grid grid-cols-1 md:grid-cols-2 gap-x-2 mt-3">
-                <TextField
-                  onChange={(e) => setWilaya(e.target.value)}
-                  placeholder={lang ? "الولاية" : "Wilaya"}
-                  label={lang ? "الولاية" : "Wilaya"}
-                  className="mb-3"
-                />
-                <TextField
-                  placeholder={lang ? "العنوان" : "Adresse"}
-                  label={lang ? "العنوان" : "Adresse"}
-                  onChange={(e) => setAdress(e.target.value)}
-                />
-              </Box>
-              <Button
-                className="font-bold w-full mt-3 py-[8px] text-black hover:bg-[#dbeafe] bg-[#dbeafe] "
-                variant="contained"
-                type="submit"
-              >
-                {lang ? "اشتري الان" : "Acheter maintenant"}
-              </Button>
-            </form>
           </Box>
         </Box>
       </Box>
+      <Review />
     </Box>
   );
 }
