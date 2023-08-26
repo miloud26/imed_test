@@ -9,6 +9,7 @@ const page = () => {
         className="block font-bold py-[8px] text-black hover:bg-[#dbeafe] bg-[#dbeafe] ml-[12px] w-[310px]"
         variant="contained"
       >
+        {" "}
         {lang ? "الصفحة قيد الانشاء" : "La page est en construction"}
       </Button>
     </Box>
