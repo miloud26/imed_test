@@ -352,6 +352,7 @@ export default function Page({ params }: ProductType) {
                   <FormControl>
                     <RadioGroup>
                       <FormControlLabel
+                        className="mb-5"
                         onClick={() => {
                           setQuantity(1);
                           setPrixDelevred(500);
