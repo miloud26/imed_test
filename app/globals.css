@@ -19,6 +19,7 @@
 }
 html {
   scroll-behavior: smooth;
+  direction: rtl !important;
 }
 .arabic {
   font-family: "Noto Naskh Arabic", serif !important;
