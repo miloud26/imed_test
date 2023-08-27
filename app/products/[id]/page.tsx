@@ -245,7 +245,7 @@ export default function Page({ params }: ProductType) {
       >
         <Typography className="text-xl text-center font-bold w-full ">
           {lang
-            ? "هل تريد المساعدة؟ اتصل بنا +213777651022"
+            ? "هل تريد المساعدة ؟ اتصل بنا 0777651022"
             : "Veux tu aider? appelez-nous +213777651022"}
         </Typography>
       </Box>
