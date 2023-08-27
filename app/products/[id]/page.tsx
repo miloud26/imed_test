@@ -64,6 +64,7 @@ export default function Page({ params }: ProductType) {
   const dataProduct = dataProducts.filter(
     (item) => item.id.toString() == params.id.toString()
   )[0];
+  console.log(dataProduct);
 
   const upsellProduct = dataProducts
     .filter((item) => item.id.toString() == dataProduct.upsellId.toString())
