@@ -65,8 +65,6 @@ export default function Page({ params }: ProductType) {
     (item) => item.id.toString() == params.id.toString()
   )[0];
 
-  localStorage.setItem("productPage", dataProduct?.productPage);
-
   const upsellProduct = dataProducts
     .filter((item) => item.id.toString() == dataProduct.upsellId.toString())
     .slice(0, 1)[0];
@@ -122,12 +120,6 @@ export default function Page({ params }: ProductType) {
     e.preventDefault();
     deleteOrder();
 
-    const prevOrder = localStorage.getItem("dateMakeOrder");
-    const newOrder = new Date().getTime().toString();
-
-    const timeDeffrent = Number(newOrder) - Number(prevOrder);
-    localStorage.setItem("dateMakeOrder", newOrder.toString());
-
     try {
       const data = new FormData();
       data.append(
@@ -147,7 +139,7 @@ export default function Page({ params }: ProductType) {
         "prix",
         (+dataProduct.prix * +quantity + prixDelevred).toString()
       );
-      data.append("upsell", timeDeffrent <= 5 * 60 * 60 * 1000 ? "1" : "");
+      //data.append("upsell", timeDeffrent <= 5 * 60 * 60 * 1000 ? "1" : "");
 
       await fetch(sheet, {
         method: "POST",

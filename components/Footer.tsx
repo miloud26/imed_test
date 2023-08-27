@@ -96,7 +96,7 @@ const adresse = [
 ];
 
 const Footer = () => {
-  const productPage = localStorage.getItem("productPage");
+  const productPage = "1";
   const { lang } = useGlobalContext();
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

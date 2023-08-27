@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useGlobalContext } from "@/context/store";
 
 const Navbar = () => {
-  const productPage = localStorage.getItem("productPage");
+  const productPage = "1";
 
   const { lang, setLang } = useGlobalContext();
   const handleLang = () => {
