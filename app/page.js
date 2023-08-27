@@ -1,113 +1,334 @@
-import Image from 'next/image'
+"use client";
+import React, { useState, useEffect } from "react";
 
-export default function Home() {
+import {
+  Box,
+  Typography,
+  TextField,
+  Button,
+  Modal,
+  FormControlLabel,
+  Radio,
+  FormControl,
+  RadioGroup,
+} from "@mui/material";
+import Link from "next/link";
+import Image from "next/image";
+import Review from "@/components/Rev";
+
+const dataProduct = {
+  title: "First Product",
+  desc: "Description",
+  price: "3200",
+  image:
+    "https://i.discogs.com/wzG_cKpaFNQN0cblHYAvTDC5Z41ZNcbWY3NXsnSH1BA/rs:fit/g:sm/q:40/h:300/w:300/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTIxNjkw/MjYyLTE2NDE4ODM1/MjQtNjE3My5qcGVn.jpeg",
+};
+
+export default function Page() {
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [wilaya, setWilaya] = useState("");
+  const [adress, setAdress] = useState("");
+  const [quantity, setQuantity] = useState(1);
+  const [model, setModel] = useState("");
+  const [prixDelevred, setPrixDelevred] = useState(500);
+
+  useEffect(() => {
+    if (quantity > 1) {
+      setPrixDelevred(0);
+    } else {
+      setPrixDelevred(500);
+    }
+  }, [quantity]);
+
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
+  const handleSubmitOrder = async (e) => {
+    e.preventDefault();
+    deleteOrder();
+
+    try {
+      const data = new FormData();
+      data.append(
+        "date",
+        `${new Date().getDate()}/${
+          new Date().getMonth() + 1
+        } - ${new Date().getHours()}H : ${new Date().getMinutes()}M`
+      );
+      data.append("name", name);
+      data.append("phone", phone);
+      data.append("wilaya", wilaya);
+      data.append("adress", adress);
+      data.append("product", dataProduct.titleFr);
+      data.append("quantity", quantity.toString());
+      data.append("model", model);
+      data.append(
+        "prix",
+        (+dataProduct.prix * +quantity + prixDelevred).toString()
+      );
+      data.append("upsell", timeDeffrent <= 5 * 60 * 60 * 1000 ? "1" : "");
+
+      await fetch(sheet, {
+        method: "POST",
+        body: data,
+      });
+      handleOpen();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">app/page.js</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:h-auto lg:w-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+    <Box>
+      <Box className="fixed bottom-0 left-0 w-full mb-2  flex justify-center items-center btn-buynow">
+        <Button
+          onClick={() => {
+            window.scrollTo({ top: 0, left: 0 });
+          }}
+          className="  lg:text-xl w-[80%] h-[20px] py-6 font-bold lg:py-[30px] text-black hover:bg-[#91b7e9] bg-[#91b7e9] mx-[12px] flex justify-center items-center"
+          variant="contained"
+        >
+          اشتري الان
+        </Button>
+      </Box>
+      <div>
+        <Modal open={open} onClose={handleClose}>
+          <Box
+            className="w-full lg:w-[650px]"
+            sx={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+
+              bgcolor: "background.paper",
+              borderRadius: "15px",
+              boxShadow: 24,
+              p: 4,
+            }}
           >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
+            <Box>
+              <Typography className="text-3xl text-center font-bold w-full mb-6">
+                title
+              </Typography>
+            </Box>
+
+            <Box
+              flexDirection={"column"}
+              className="mt-5 flex justify-center items-center w-full"
+            >
+              <Typography className="text-center text-lg mb-6">
+                لقد تم استلام طلبك سنتصل بك للتأكيد في اقرب وقت
+              </Typography>
+              <Link href="/">
+                {" "}
+                <Button
+                  onClick={handleClose}
+                  className="block font-bold w-full py-[8px] text-black hover:bg-[#dbeafe] bg-[#dbeafe] mx-[12px] "
+                  variant="contained"
+                >
+                  موافق
+                </Button>
+              </Link>
+            </Box>
+          </Box>
+        </Modal>
       </div>
-
-      <div className="relative flex place-items-center before:absolute before:h-[300px] before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 before:lg:h-[360px] z-[-1]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className="mb-32 grid text-center lg:max-w-5xl lg:w-full lg:mb-0 lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Docs{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800 hover:dark:bg-opacity-30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Learn{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Templates{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Explore the Next.js 13 playground.
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Deploy{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
-  )
+      <Box
+        width="100%"
+        height={"80px"}
+        className="bg-blue-400 my-5  flex justify-center items-center"
+      >
+        <Typography className="text-xl text-center font-bold w-full ">
+          هل تريد المساعدة؟ اتصل بنا +213777651022
+        </Typography>
+      </Box>
+      <Box className=" flex w-fit justify-center items-start px-5 md:px-14  lg:px-[200px] gap-5 flex-wrap lg:flex-nowrap">
+        <Box className="border border-blue-300 border-solid rounded-md relative mr-4 mt-10  mb-5 lg:sticky lg:top-[80px] lg:left-0 w-full lg:w-[500px] flex items-center justify-end">
+          <img
+            className="rounded-lg w-full h-full "
+            alt={dataProduct?.title}
+            src={dataProduct?.image}
+          />
+        </Box>
+        <Box className=" w-full lg:w-[48%] ">
+          <Box className="mb-5 w-full">
+            {" "}
+            <Typography className="text-3xl font-bold w-full mt-3">
+              {dataProduct.title}
+            </Typography>
+            <Typography className="text-[24px] font-bold w-full mt-3 text-blue-400">
+              {dataProduct?.price}دج
+            </Typography>
+          </Box>
+          <Box>
+            <form
+              onSubmit={handleSubmitOrder}
+              className="border-3 border-blue-400 border-solid rounded-md p-5 shadow-xl my-10"
+            >
+              <Box className="w-full grid grid-cols-1 md:grid-cols-2 gap-x-2 ">
+                <TextField
+                  onChange={(e) => {
+                    setName(e.target.value);
+                    updateOrder();
+                  }}
+                  placeholder="الاسم الكامل"
+                  label="الاسم الكامل"
+                  className="mb-3"
+                />
+                <TextField
+                  onChange={(e) => {
+                    setPhone(e.target.value);
+                    updateOrder();
+                  }}
+                  placeholder="رقم الهاتف"
+                  label="رقم الهاتف"
+                />
+              </Box>
+              <Box className="w-full grid grid-cols-1 md:grid-cols-2 gap-x-2 mt-3">
+                <TextField
+                  onChange={(e) => {
+                    setWilaya(e.target.value);
+                    updateOrder();
+                  }}
+                  placeholder="الولاية"
+                  label="الولاية"
+                  className="mb-3"
+                />
+                <TextField
+                  placeholder="البلدية"
+                  label="البلدية"
+                  onChange={(e) => {
+                    setAdress(e.target.value);
+                    updateOrder();
+                  }}
+                />
+              </Box>
+              <Box className="my-6 w-full p-4  bg-[#dbeafe] rounded-lg">
+                <Box className="w-fulll flex justify-between items-center mb-7">
+                  <Typography className="font-bold text-xl">
+                    سعر المنتج
+                  </Typography>
+                  <Typography className="font-bold text-xl">
+                    {dataProduct?.prix} دج
+                  </Typography>
+                </Box>
+                <Box className="w-fulll flex justify-between items-center mb-7">
+                  <Typography className="font-bold text-xl">الكمية</Typography>
+                  <Typography className="font-bold text-xl">
+                    {quantity}
+                  </Typography>
+                </Box>
+                <Box className="w-fulll flex justify-between items-center mb-7">
+                  <Typography className="font-bold text-xl">
+                    سعر التوصيل
+                  </Typography>
+                  <Typography className="font-bold text-xl">
+                    {prixDelevred} دج
+                  </Typography>
+                </Box>
+                <Box className="w-fulll flex justify-between items-center ">
+                  <Typography className="font-bold text-xl">المجموع</Typography>
+                  <Typography className="font-bold text-xl">
+                    {(+dataProduct?.prix * quantity + prixDelevred).toString()}{" "}
+                    دج
+                  </Typography>
+                </Box>
+              </Box>
+              <Box className="my-6 w-full p-4  bg-[#dbeafe] rounded-lg mt-5">
+                {" "}
+                <Box className="w-fulll flex justify-between items-center ">
+                  <FormControl>
+                    <RadioGroup>
+                      <FormControlLabel
+                        onClick={() => {
+                          setQuantity(1);
+                          setPrixDelevred(500);
+                        }}
+                        value="female"
+                        control={<Radio />}
+                        label={
+                          <Typography className="font-bold text-xl">
+                            قطعة واحدة و التوصيل 500 دج
+                          </Typography>
+                        }
+                      />
+                      <FormControlLabel
+                        onClick={() => {
+                          setQuantity(2);
+                          setPrixDelevred(0);
+                        }}
+                        value="male"
+                        control={<Radio />}
+                        label={
+                          <Typography className="font-bold text-xl">
+                            اشتري اثنين واحصل على توصيل مجاني
+                          </Typography>
+                        }
+                      />
+                    </RadioGroup>
+                  </FormControl>
+                </Box>
+              </Box>
+              <Box className="w-full flex justify-between items-center ">
+                <Button
+                  className="font-bold w-[60%] ml-1 mt-3 py-[8px] text-black hover:bg-[#dbeafe] bg-[#dbeafe] "
+                  variant="contained"
+                  type="submit"
+                >
+                  اشتري الان
+                </Button>
+                <Box className="w-[40%] flex justify-between items-center  rounded-lg p-4">
+                  <Button
+                    className="font-bold flex justify-between items-center w-[100%] mt-3 py-[8px] text-black hover:bg-[#dbeafe] bg-[#dbeafe] "
+                    variant="contained"
+                  >
+                    <Typography
+                      className="font-bold "
+                      onClick={() => setQuantity(quantity + 1)}
+                    >
+                      +
+                    </Typography>
+                    <Typography className="font-bold">{quantity}</Typography>
+                    <Typography
+                      className="font-bold "
+                      onClick={() => {
+                        if (quantity == 1) {
+                          setQuantity(quantity);
+                          setPrixDelevred(500);
+                        } else {
+                          setQuantity(quantity - 1);
+                          setPrixDelevred(0);
+                        }
+                      }}
+                    >
+                      -
+                    </Typography>
+                  </Button>
+                </Box>
+              </Box>
+            </form>
+            <Box className="mt-8">
+              {" "}
+              <img
+                src="/shipping.jpeg"
+                alt="shipping"
+                className="w-auto object-cover"
+              />
+            </Box>
+            <Box className="w-full flex justify-center">
+              <div
+                dangerouslySetInnerHTML={{
+                  __html: dataProduct?.desc,
+                }}
+              />
+            </Box>
+          </Box>
+        </Box>
+      </Box>
+      <Review />
+    </Box>
+  );
 }
