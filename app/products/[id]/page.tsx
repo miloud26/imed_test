@@ -64,7 +64,6 @@ export default function Page({ params }: ProductType) {
   const dataProduct = dataProducts.filter(
     (item) => item.id.toString() == params.id.toString()
   )[0];
-  console.log(dataProduct);
 
   const upsellProduct = dataProducts
     .filter((item) => item.id.toString() == dataProduct.upsellId.toString())
@@ -272,7 +271,7 @@ export default function Page({ params }: ProductType) {
           <Box>
             <form
               onSubmit={handleSubmitOrder}
-              className="border-3 border-blue-400 border-solid rounded-md p-5 shadow-xl my-10"
+              className="border-3 border-blue-400 border-solid rounded-md p-2 lg:p-5 shadow-xl my-10"
             >
               <Box className="w-full grid grid-cols-1 md:grid-cols-2 gap-x-2 ">
                 <TextField
@@ -397,13 +396,13 @@ export default function Page({ params }: ProductType) {
               </Box>
               <Box className="w-full flex justify-between items-center ">
                 <Button
-                  className="font-bold w-[60%] ml-1 mt-3 py-[8px] text-black hover:bg-[#dbeafe] bg-[#dbeafe] "
+                  className="font-bold w-[55%] ml-1 mt-3 py-[8px] text-black hover:bg-[#dbeafe] bg-[#dbeafe] "
                   variant="contained"
                   type="submit"
                 >
                   {lang ? "اشتري الان" : "Acheter maintenant"}
                 </Button>
-                <Box className="w-[40%] flex justify-between items-center  rounded-lg p-4">
+                <Box className="w-[45%] flex justify-between items-center  rounded-lg p-4">
                   <Button
                     className="font-bold flex justify-between items-center w-[100%] mt-3 py-[8px] text-black hover:bg-[#dbeafe] bg-[#dbeafe] "
                     variant="contained"
